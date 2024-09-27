@@ -6,7 +6,7 @@ import { Cart } from "../cart";
 
 export function Header() {
   return (
-    <header className="flex items-center justify-between mx-24">
+    <header className="flex items-center justify-between mx-24 px-4">
       <img src={megaStore} alt="Logo da loja" className="w-60" />
       <nav className="flex items-center">
         <ul className="flex gap-20 border-none ">

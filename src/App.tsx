@@ -1,5 +1,6 @@
 import { Banner } from "./components/banner"
 import { CardList } from "./components/cardList"
+import { Footer } from "./components/footer"
 import { Header } from "./components/header"
 
 function App() {
@@ -12,6 +13,8 @@ function App() {
       <Banner/>
       <CardList/>
     </main>
+    <Footer/>
+
     </>
   )
 }

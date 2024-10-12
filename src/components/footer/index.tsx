@@ -1,9 +1,7 @@
 import visa from "../../assets/badges/logo-visa-256.png";
 import master from "../../assets/badges/logo-mastercard-256.png";
 import pix from "../../assets/badges/logo-pix-256.png";
-import apple from "../../assets/badges/apple.svg";
 import mercado from "../../assets/badges/logo-mercado-pago-256.png";
-import google from "../../assets/badges/google.svg";
 import gitHub from "../../assets/badges/github.png";
 
 export function Footer() {

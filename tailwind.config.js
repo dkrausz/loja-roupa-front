@@ -12,6 +12,7 @@ export default {
       colors: {
         customGray: '#ebebeb', 
       },
+ 
     },
   },
   plugins: [],

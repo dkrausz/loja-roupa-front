@@ -1,4 +1,4 @@
-import img1 from "../../assets/roupa1.jpg";
+//import img1 from "../../assets/roupa1.jpg";
 import img2 from "../../assets/roupa2.jpg";
 
 export function Banner() {

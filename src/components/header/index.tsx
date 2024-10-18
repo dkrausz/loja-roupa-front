@@ -3,17 +3,17 @@ import megaStore from "../../assets/Mega-Store-17-09-2024 (1).png";
 import {SearchBar} from "../searchBar";
 import {Cart} from "../cart";
 import {Link} from "react-router-dom";
+import {useContext} from "react";
+import {ClientContext} from "../../providers/clientContext";
 
 interface IHeaderProps {
   SetShowLogintModal: React.Dispatch<React.SetStateAction<boolean>>;
   ShowLoginModal: boolean;
 }
 
-const user = {
-  name: "Visitante",
-};
-
 export function Header({SetShowLogintModal, ShowLoginModal}: IHeaderProps) {
+  const {activeClient} = useContext(ClientContext);
+
   return (
     <header className="flex items-center justify-between mx-24 px-4">
       <Link to="/">
@@ -29,7 +29,7 @@ export function Header({SetShowLogintModal, ShowLoginModal}: IHeaderProps) {
       </nav>
       <div className="flex items-center gap-8">
         <SearchBar />
-        <h2>Olá {user.name}</h2>
+        <h2>Olá {activeClient ? activeClient.name : "Visitante"}</h2>
 
         <Cart />
         <VscAccount size={25} onClick={() => SetShowLogintModal(!ShowLoginModal)} />

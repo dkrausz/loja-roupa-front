@@ -5,7 +5,7 @@ export function ClientRegister() {
   return (
     <>
       <TemplatePage>
-        <h1 className="text-center">RegisterPage</h1>
+        <h1 className="text-center m-6 text-3xl font-bold">Cadastre-se</h1>
 
         <RegisterClientForm />
       </TemplatePage>

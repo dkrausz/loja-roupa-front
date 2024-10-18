@@ -10,7 +10,7 @@ interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
 //prettier-ignore
 export const Input = forwardRef(({ label,inputWidth, error, ...rest }: IInputProps, ref: ForwardedRef<HTMLInputElement>) => {
   
-  const classes = `flex flex-col ${inputWidth}`;
+  const classes = `flex flex-col ${inputWidth} bg-zinc-200`;
   return (
     <div className={classes}>
       <div className="flex justify-between items-center">       

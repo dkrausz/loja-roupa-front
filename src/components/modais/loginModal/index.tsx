@@ -1,9 +1,10 @@
 import {SubmitHandler, useForm} from "react-hook-form";
-import {Input} from "../../Input";
+import {Input} from "../../input";
 import {loginSchema, TloginForm} from "./schema";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {useEffect, useRef} from "react";
+import {useContext, useEffect, useRef} from "react";
 import {Link} from "react-router-dom";
+import {ClientContext} from "../../../providers/clientContext";
 
 interface ICartModalProps {
   SetShowLogintModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -11,6 +12,7 @@ interface ICartModalProps {
 
 export function LoginModal({SetShowLogintModal}: ICartModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const {login} = useContext(ClientContext);
 
   const {
     register,
@@ -20,6 +22,7 @@ export function LoginModal({SetShowLogintModal}: ICartModalProps) {
 
   const submit: SubmitHandler<TloginForm> = async (formData) => {
     console.log(formData);
+    login(formData);
   };
 
   useEffect(() => {
@@ -65,7 +68,7 @@ export function LoginModal({SetShowLogintModal}: ICartModalProps) {
 
         <p className="mt-6">
           Ainda não tem uma conta,{" "}
-          <Link to="/registerclient" className="text-blue-700 hover:text-blue-800">
+          <Link to="/registerclient" className="text-blue-800 hover:text-blue-600">
             clique aqui
           </Link>
         </p>

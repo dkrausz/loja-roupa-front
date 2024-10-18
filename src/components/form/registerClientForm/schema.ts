@@ -6,22 +6,25 @@ const minValidDate = () => {
   return minAge;
 };
 
-export const clientSchema = z.object({
-  name: z.string().max(255).min(1, "Nome é obrigatorio"),
-  email: z.string().email().min(1, "Email é obrigatorio"),
-  password: z
-    .string()
-    .min(8, "A senha precisa ter 8 caracteres")
-    .max(50)
-    .regex(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])/),
-  confirmPwd: z
-    .string()
-    .min(8)
-    .max(50)
-    .regex(/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])/),
-  birthDate: z.coerce.date().max(new Date(minValidDate())),
-  CPF: z.string().max(11),
-  phone: z.string().max(11),
-});
+export const clientSchema = z
+  .object({
+    name: z.string().max(255).min(1, "o campo nome é obrigatorio"),
+    email: z.string().email().min(1, "o campo email é obrigatorio"),
+    password: z
+      .string()
+      .min(8, "A senha precisa ter no minimo 8 caracteres")
+      .regex(/[a-z]+/, "É necessario pelo menos uma letra minuscula")
+      .regex(/[A-Z]+/, "É necessario pelo menos uma letra maiuscula")
+      .regex(/[0-9]+/, "É necessario pelo menos um número")
+      .regex(/[!@#$%^&*()_+{}[\]:;<>,.?~\\-]+/, "É necessário conter pelo menos um caracter especial."),
+    confirmPwd: z.string(),
+    birthDate: z.coerce.date().max(new Date(minValidDate())),
+    CPF: z.string().max(14),
+    phone: z.string().max(11),
+  })
+  .refine(({password, confirmPwd}) => password === confirmPwd, {
+    message: "As senhas não correspondem",
+    path: ["confirmPwd"],
+  });
 
 export type TCreateClient = z.infer<typeof clientSchema>;

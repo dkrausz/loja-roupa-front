@@ -6,11 +6,10 @@ interface IInputProps extends InputHTMLAttributes<HTMLInputElement> {
   inputWidth: string;
   error?: FieldError;
 }
-//{error ? <p className="text-xs text-red-600 mt-1">{error.message}</p> : null}
 //prettier-ignore
 export const Input = forwardRef(({ label,inputWidth, error, ...rest }: IInputProps, ref: ForwardedRef<HTMLInputElement>) => {
   
-  const classes = `flex flex-col ${inputWidth} bg-zinc-200`;
+  const classes = `flex flex-col ${inputWidth} bg-zinc-300`;
   return (
     <div className={classes}>
       <div className="flex justify-between items-center">       

@@ -1,23 +1,19 @@
-import { ReactNode, useState } from 'react';
-import { Header } from '../../components/header';
-import { LoginModal } from '../../components/modais/loginModal';
-import { Footer } from '../../components/footer';
+import {ReactNode, useContext} from "react";
+import {Header} from "../../components/header";
+import {Footer} from "../../components/footer";
+import {ControllerContext} from "../../providers/controllerContext";
+import {TemplateModal} from "../../components/modais/templateModal";
 
 interface templateProps {
   children: ReactNode;
 }
 
-export function TemplatePage({ children }: templateProps) {
-  const [ShowLoginModal, SetShowLogintModal] = useState(false);
+export function TemplatePage({children}: templateProps) {
+  const {showTemplateModal} = useContext(ControllerContext);
   return (
     <>
-      <Header
-        SetShowLogintModal={SetShowLogintModal}
-        ShowLoginModal={ShowLoginModal}
-      />
-      {ShowLoginModal ? (
-        <LoginModal SetShowLogintModal={SetShowLogintModal} />
-      ) : null}
+      <Header />
+      {showTemplateModal ? <TemplateModal /> : null}
       {children}
       <Footer />
     </>

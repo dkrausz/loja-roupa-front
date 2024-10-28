@@ -5,14 +5,11 @@ import {Cart} from "../cart";
 import {Link} from "react-router-dom";
 import {useContext} from "react";
 import {ClientContext} from "../../providers/clientContext";
+import {ControllerContext} from "../../providers/controllerContext";
 
-interface IHeaderProps {
-  SetShowLogintModal: React.Dispatch<React.SetStateAction<boolean>>;
-  ShowLoginModal: boolean;
-}
-
-export function Header({SetShowLogintModal, ShowLoginModal}: IHeaderProps) {
+export function Header() {
   const {activeClient} = useContext(ClientContext);
+  const {showTemplateModal, setShowTemplateModal} = useContext(ControllerContext);
 
   return (
     <header className="flex items-center justify-between mx-24 px-4">
@@ -32,7 +29,7 @@ export function Header({SetShowLogintModal, ShowLoginModal}: IHeaderProps) {
         <h2>Olá {activeClient ? activeClient.name : "Visitante"}</h2>
 
         <Cart />
-        <VscAccount size={25} onClick={() => SetShowLogintModal(!ShowLoginModal)} />
+        <VscAccount size={25} onClick={() => setShowTemplateModal(!showTemplateModal)} />
       </div>
     </header>
   );

@@ -6,7 +6,7 @@ const minValidDate = () => {
   return minAge;
 };
 
-export const clientSchema = z
+export const updateClientSchema = z
   .object({
     name: z.string().max(255).min(1, "o campo nome é obrigatorio"),
     email: z.string().email().min(1, "o campo email é obrigatorio"),
@@ -22,9 +22,6 @@ export const clientSchema = z
     CPF: z.string().max(14),
     phone: z.string().max(14),
   })
-  .refine(({password, confirmPwd}) => password === confirmPwd, {
-    message: "As senhas não correspondem",
-    path: ["confirmPwd"],
-  });
+  .partial();
 
-export type TCreateClient = z.infer<typeof clientSchema>;
+export type TUpdateClient = z.infer<typeof updateClientSchema>;

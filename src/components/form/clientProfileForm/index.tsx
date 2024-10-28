@@ -1,14 +1,27 @@
 import {SubmitHandler, useForm} from "react-hook-form";
 import {Input} from "../../input/standard";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {clientSchema, TCreateClient} from "./schema";
 import {InputCPF} from "../../input/inputCPF";
-import {useContext} from "react";
-import {ClientContext} from "../../../providers/clientContext";
+import {useEffect, useState} from "react";
+import {TClient} from "../../../providers/clientContext";
 import {InputPhone} from "../../input/inputPhone";
+import {format} from "date-fns";
+import {clientSchema, TCreateClient} from "../registerClientForm/schema";
 
-export function RegisterClientForm() {
-  const {clientRegister} = useContext(ClientContext);
+type IClientFormProps = {
+  client?: TClient;
+};
+
+export function ClientProfileForm({client}: IClientFormProps) {
+  const [updateForm, setUpdateForm] = useState(false);
+
+  useEffect(() => {
+    if (client) {
+      setUpdateForm(true);
+    } else {
+      setUpdateForm(false);
+    }
+  }, []);
 
   const minAge = () => {
     const today = new Date();
@@ -23,13 +36,22 @@ export function RegisterClientForm() {
     handleSubmit,
     formState: {errors},
   } = useForm<TCreateClient>({
+    defaultValues: client
+      ? {
+          name: client.name,
+          email: client.email,
+          password: "******",
+          confirmPwd: "******",
+          birthDate: new Date(format(client.birthDate, "dd/MM/yyyy")),
+          CPF: client.CPF,
+          phone: client.phone,
+        }
+      : undefined,
     resolver: zodResolver(clientSchema),
   });
 
   const submit: SubmitHandler<TCreateClient> = async (formData) => {
     console.log(formData);
-
-    clientRegister(formData);
   };
 
   return (
@@ -42,6 +64,7 @@ export function RegisterClientForm() {
         placeholder="Digite seu nome"
         className="w-64 rounded-md h-8 "
         error={errors.name}
+        disabled={updateForm}
         {...register("name")}
       />
       <Input
@@ -52,30 +75,11 @@ export function RegisterClientForm() {
         placeholder="Digite seu e-mail"
         className="w-64 rounded-md h-8"
         error={errors.email}
+        disabled={updateForm}
         {...register("email")}
       />
 
-      <Input
-        inputWidth="w-11/12"
-        label="Senha"
-        id={"senha"}
-        type={"password"}
-        placeholder="Digite sua senha"
-        className="w-64 rounded-md h-8"
-        error={errors.password}
-        {...register("password")}
-      />
-
-      <Input
-        inputWidth="w-11/12"
-        label="Confirme sua senha"
-        id={"confirmPwd"}
-        type={"password"}
-        placeholder="Confirme sua senha"
-        className="w-64 rounded-md h-8"
-        error={errors.confirmPwd}
-        {...register("confirmPwd")}
-      />
+      <button className="w-11/12 h-10 bg-blue-500 rounded-xl text-zinc-200 mb-4 hover:bg-blue-600">Alterar Senha</button>
 
       <Input
         inputWidth="w-11/12"
@@ -85,6 +89,8 @@ export function RegisterClientForm() {
         className="w-64 rounded-md h-8"
         error={errors.birthDate}
         max={minAge()}
+        value={client ? format(client.birthDate, "yyyy-MM-dd") : undefined}
+        disabled={updateForm}
         {...register("birthDate")}
       />
       <InputCPF
@@ -95,6 +101,7 @@ export function RegisterClientForm() {
         placeholder="Ex: 000.000.000-00"
         className="w-64 rounded-md h-8"
         error={errors.CPF}
+        disabled={updateForm}
         {...register("CPF")}
       />
 
@@ -106,11 +113,12 @@ export function RegisterClientForm() {
         placeholder="(00)00000-0000"
         className="w-64 rounded-md h-8"
         error={errors.phone}
+        disabled={updateForm}
         {...register("phone")}
       />
 
-      <button type="submit" className="w-11/12 h-10 bg-blue-500 rounded-xl text-zinc-200">
-        Enviar
+      <button className="w-11/12 h-10 bg-blue-500 rounded-xl text-zinc-200 hover:bg-blue-600" onClick={() => setUpdateForm(!updateForm)}>
+        Editar
       </button>
     </form>
   );

@@ -7,27 +7,25 @@ import gitHub from "../../assets/badges/github.png";
 export function Footer() {
   return (
     <footer className="flex justify-between mx-24 gap-16 mt-12">
-      <div className="flex items-center justify-center ">
-        <p className="flex gap-6 items-center">
-          desenvolvido por
-          <div className="border-2 border-solid  w-28 rounded-2xl border-gray-600 hover:border-gray-950">
-            <a href="https://github.com/dkrausz" target="blank" className="flex items-center">
-              <img src={gitHub} alt="" className="w-8" /> Danilo
-            </a>
-          </div>
-          <div className="border-2 border-solid  w-28 rounded-2xl  border-gray-600 hover:border-gray-950">
-            <a href="https://github.com/anapaulama" target="blank" className="flex items-center">
-              <img src={gitHub} alt="" className="w-8" />
-              Ana Paula
-            </a>
-          </div>
-          <div className="border-2 border-solid  w-28 rounded-2xl  border-gray-600 hover:border-gray-950">
-            <a href="https://github.com/matheusnardii" target="blank" className="flex items-center">
-              <img src={gitHub} alt="" className="w-8" />
-              Matheus
-            </a>
-          </div>
-        </p>
+      <div className="flex items-center justify-center gap-6">
+        <p className="flex gap-6 items-center">desenvolvido por</p>
+        <div className="border-2 border-solid  w-28 rounded-2xl border-gray-600 hover:border-gray-950">
+          <a href="https://github.com/dkrausz" target="blank" className="flex items-center">
+            <img src={gitHub} alt="" className="w-8" /> Danilo
+          </a>
+        </div>
+        <div className="border-2 border-solid  w-28 rounded-2xl  border-gray-600 hover:border-gray-950">
+          <a href="https://github.com/anapaulama" target="blank" className="flex items-center">
+            <img src={gitHub} alt="" className="w-8" />
+            Ana Paula
+          </a>
+        </div>
+        <div className="border-2 border-solid  w-28 rounded-2xl  border-gray-600 hover:border-gray-950">
+          <a href="https://github.com/matheusnardii" target="blank" className="flex items-center">
+            <img src={gitHub} alt="" className="w-8" />
+            Matheus
+          </a>
+        </div>
       </div>
 
       <div className="p-4 flex gap-4">

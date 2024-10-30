@@ -14,7 +14,7 @@ export const Input = forwardRef(({ label,inputWidth, error, ...rest }: IInputPro
     <div className={classes}>
       <div className="flex justify-between items-center">       
         {label ? <label htmlFor={rest.id} >{label}</label> : null}
-        <input ref={ref} {...rest}  />    
+        <input ref={ref} {...rest} />    
       </div>  
         {error ? <p className="text-xs text-red-600 mt-1 h-8">{error.message}</p> : <p className="block h-8"></p>}
     

@@ -1,11 +1,5 @@
 import {z} from "zod";
 
-const minValidDate = () => {
-  const nowDate = new Date();
-  const minAge = nowDate.setFullYear(nowDate.getFullYear() - 18, nowDate.getMonth(), nowDate.getDay());
-  return minAge;
-};
-
 export const updateClientSchema = z
   .object({
     name: z.string().max(255).min(1, "o campo nome é obrigatorio"),
@@ -18,10 +12,12 @@ export const updateClientSchema = z
       .regex(/[0-9]+/, "É necessario pelo menos um número")
       .regex(/[!@#$%^&*()_+{}[\]:;<>,.?~\\-]+/, "É necessário conter pelo menos um caracter especial."),
     confirmPwd: z.string(),
-    birthDate: z.coerce.date().max(new Date(minValidDate())),
+    birthDate: z.string(),
     CPF: z.string().max(14),
     phone: z.string().max(14),
   })
   .partial();
 
-export type TUpdateClient = z.infer<typeof updateClientSchema>;
+export type TUpdateClient = Omit<z.infer<typeof updateClientSchema>, "birthDate"> & {
+  birthDate?: string | Date;
+};

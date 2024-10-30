@@ -6,6 +6,7 @@ import {InputCPF} from "../../input/inputCPF";
 import {useContext} from "react";
 import {ClientContext} from "../../../providers/clientContext";
 import {InputPhone} from "../../input/inputPhone";
+import {InputPassword} from "../../input/inputPassword";
 
 export function RegisterClientForm() {
   const {clientRegister} = useContext(ClientContext);
@@ -50,27 +51,24 @@ export function RegisterClientForm() {
         id={"email"}
         type={"email"}
         placeholder="Digite seu e-mail"
-        className="w-64 rounded-md h-8"
+        className="w-64 rounded-md h-8 "
         error={errors.email}
         {...register("email")}
       />
-
-      <Input
+      <InputPassword
         inputWidth="w-11/12"
         label="Senha"
         id={"senha"}
-        type={"password"}
         placeholder="Digite sua senha"
         className="w-64 rounded-md h-8"
         error={errors.password}
         {...register("password")}
       />
 
-      <Input
+      <InputPassword
         inputWidth="w-11/12"
         label="Confirme sua senha"
         id={"confirmPwd"}
-        type={"password"}
         placeholder="Confirme sua senha"
         className="w-64 rounded-md h-8"
         error={errors.confirmPwd}

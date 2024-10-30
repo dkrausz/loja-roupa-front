@@ -5,6 +5,7 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {useContext} from "react";
 import {Link} from "react-router-dom";
 import {ClientContext} from "../../../providers/clientContext";
+import {InputPassword} from "../../input/inputPassword";
 
 export function LoginModal() {
   const {login} = useContext(ClientContext);
@@ -34,10 +35,9 @@ export function LoginModal() {
         {...register("email")}
       />
 
-      <Input
+      <InputPassword
         label={"Senha: "}
         id={"login-password"}
-        type={"password"}
         placeholder="Digite aqui sua senha"
         error={errors.password}
         className="w-64 rounded-md h-8"

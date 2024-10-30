@@ -9,8 +9,9 @@ export function RoutesMain() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/registerclient" element={<ClientRegister />} />
-      <Route element={<ProtectRoutes />}>
-        <Route path="/clientProfile" element={<ClientProfile />} />
+
+      <Route path="/clientProfile" element={<ProtectRoutes />}>
+        <Route index element={<ClientProfile />} />
       </Route>
     </Routes>
   );

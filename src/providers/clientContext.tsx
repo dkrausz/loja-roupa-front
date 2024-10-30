@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 import {AxiosError} from "axios";
 import {TloginForm} from "../components/modais/loginModal/schema";
 import {ControllerContext} from "./controllerContext";
+import {TUpdateClient} from "../components/form/clientProfileForm/schema";
 
 interface IClientProviderProps {
   children: React.ReactNode;
@@ -17,6 +18,7 @@ interface IClientContext {
   login: (clientData: TloginForm) => Promise<void>;
   activeClient: IClient | null;
   logoff: () => void;
+  clientUpdate: (clientData: TUpdateClient) => Promise<void>;
 }
 
 interface IToastyMessage {
@@ -37,7 +39,7 @@ interface IAddress {
   clientId: number;
 }
 
-interface IClient {
+export interface IClient {
   publicId: string;
   name: string;
   email: string;
@@ -67,6 +69,7 @@ export const ClientContext = createContext({} as IClientContext);
 export const ClientContextProvider = ({children}: IClientProviderProps) => {
   const {setShowTemplateModal} = useContext(ControllerContext);
   const [activeClient, setActiveClient] = useState<IClient | null>(null);
+  const [clientToken, setClientToken] = useState("");
   const navigate = useNavigate();
 
   const login = async (clientData: TloginForm) => {
@@ -92,6 +95,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     setActiveClient(null);
     localStorage.removeItem("@TOKEN");
     localStorage.removeItem("@CLIENTID");
+    setClientToken("");
     navigate("/");
     setShowTemplateModal(false);
   };
@@ -128,31 +132,77 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     }
   };
 
-  useEffect(() => {
-    const autoLogin = async () => {
-      const token = localStorage.getItem("@TOKEN");
-      const id = localStorage.getItem("@CLIENTID");
-      if (token) {
-        try {
-          const {data} = await api.get(`clients/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          });
-          setActiveClient(data);
+  const clientUpdate = async (clientData: TUpdateClient): Promise<void> => {
+    let formatedDate;
+    if (clientData.birthDate) {
+      formatedDate = format(clientData?.birthDate, "yyyy/MM/dd");
+    }
 
-          navigate("/");
-        } catch (error) {
-          console.log(error);
-        }
+    const formatedCPF = clientData.CPF?.replace(/[.-]/g, "");
+    const payload = {...clientData, CPF: formatedCPF, birthDate: formatedDate};
+    try {
+      console.log(payload);
+      const {data} = await api.patch(`/clients/${activeClient?.publicId}`, payload, {
+        headers: {
+          Authorization: `Bearer ${clientToken}`,
+        },
+      });
+
+      toast.success(<Msg status={"Cadastro atualizado com sucesso!"} />, {autoClose: 1500});
+
+      console.log(data);
+
+      setTimeout(() => navigate("/"), 2000);
+      autoLogin();
+    } catch (error) {
+      const currentError = error as AxiosError<errorAxios>;
+      console.log(currentError.response?.data.message);
+      console.log(currentError.response?.data.errors);
+      toast.error(
+        <Msg
+          status={"Ops! Algo deu errado"}
+          message={
+            currentError.response?.data.message
+              ? currentError.response.data.message
+              : currentError.response?.data.errors
+                ? currentError.response?.data.errors[0]
+                : ""
+          }
+        />,
+        {autoClose: 3000},
+      );
+    }
+  };
+
+  const autoLogin = async () => {
+    const token = localStorage.getItem("@TOKEN");
+    const id = localStorage.getItem("@CLIENTID");
+    if (token) {
+      setClientToken(token);
+      console.log("autologin");
+
+      try {
+        const {data} = await api.get(`clients/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setActiveClient(data);
+
+        navigate("/");
+      } catch (error) {
+        console.log(error);
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     autoLogin();
   }, []);
   //prettier-ignore
 
   return (
-  <ClientContext.Provider value={{clientRegister,login,activeClient,logoff}}>
+  <ClientContext.Provider value={{clientRegister,login,activeClient,logoff,clientUpdate}}>
     {children}
   </ClientContext.Provider>
   )

@@ -72,7 +72,6 @@ export function CardList() {
     },
   ];
 
-  console.log(mockList);
   return (
     <div className="mx-24 mb-8 p-2 px-20 flex flex-col items-center ">
       <h2 className="text-6xl text-center font-bold">Ofertas</h2>

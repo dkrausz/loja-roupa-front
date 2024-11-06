@@ -6,6 +6,18 @@ const minValidDate = () => {
   return minAge;
 };
 
+export const addressSchema = z.object({
+  street: z.string().min(1).max(100),
+  number: z.coerce.number().min(1),
+  complement: z.string().max(100).nullish(),
+  zipCode: z.string().regex(/^\d{5}-\d{3}$/, {message: "zipCode must be in format XXXXX-XXX"}),
+  neighborhood: z.string().min(1).max(20),
+  state: z.string().min(2).max(20),
+  city: z.string().min(1).max(50),
+  country: z.string().min(1).max(20),
+  clientId: z.number().min(1).nullish(),
+});
+
 export const clientSchema = z
   .object({
     name: z.string().max(255).min(1, "o campo nome é obrigatorio"),
@@ -21,6 +33,7 @@ export const clientSchema = z
     birthDate: z.coerce.date().max(new Date(minValidDate())),
     CPF: z.string().max(14),
     phone: z.string().max(14),
+    address: addressSchema,
   })
   .refine(({password, confirmPwd}) => password === confirmPwd, {
     message: "As senhas não correspondem",
@@ -45,5 +58,9 @@ export const changePasswordSchema = z
   });
 
 export type TChangePassword = z.infer<typeof changePasswordSchema>;
+export type TAddress = z.infer<typeof addressSchema>;
 
 export type TCreateClient = z.infer<typeof clientSchema>;
+
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface IAddress extends TAddress {}

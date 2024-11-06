@@ -17,7 +17,6 @@ export function LoginModal() {
   } = useForm<TloginForm>({resolver: zodResolver(loginSchema)});
 
   const submit: SubmitHandler<TloginForm> = async (formData) => {
-    console.log(formData);
     login(formData);
   };
 

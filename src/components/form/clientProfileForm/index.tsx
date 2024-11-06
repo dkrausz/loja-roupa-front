@@ -10,6 +10,7 @@ import {updateClientSchema} from "./schema";
 import {ChangePasswordModal} from "../../modais/changePasswordModal";
 import {TUpdateClient} from "./schema";
 import {isEqual} from "lodash";
+import {ChangeAddressModal} from "../../modais/changeAddressModal/template";
 
 type IClientFormProps = {
   client?: TClient;
@@ -17,6 +18,7 @@ type IClientFormProps = {
 
 export function ClientProfileForm({client}: IClientFormProps) {
   const [updateForm, setUpdateForm] = useState(false);
+  const [updateAddress, setUpdateAddress] = useState(false);
   const [passwordModal, setPasswordModal] = useState(false);
   const [clientOldData, setClientOldData] = useState<IClient | null>(null);
   const {clientUpdate} = useContext(ClientContext);
@@ -55,15 +57,22 @@ export function ClientProfileForm({client}: IClientFormProps) {
     resolver: zodResolver(updateClientSchema),
   });
 
-  useEffect(() => {
-    console.log(errors);
-  }, [errors]);
+  const diffValues = (oldData: TUpdateClient, newData: TUpdateClient): Partial<TUpdateClient> => {
+    const updatedData: Partial<TUpdateClient> = {};
+
+    (Object.keys(oldData) as Array<keyof TUpdateClient>).forEach((key) => {
+      if (!isEqual(oldData[key], newData[key])) {
+        if (key === "birthDate") {
+          updatedData[key] = newData[key] instanceof Date ? newData[key].toISOString() : newData[key];
+        } else {
+          updatedData[key] = newData[key];
+        }
+      }
+    });
+    return updatedData;
+  };
 
   const submit: SubmitHandler<TUpdateClient> = (formData) => {
-    console.log("??");
-    console.log(formData);
-    console.log(clientOldData);
-
     const oldData = {
       CPF: clientOldData?.CPF,
       birthDate: format(clientOldData!.birthDate, "yyyy/MM/dd"),
@@ -71,8 +80,6 @@ export function ClientProfileForm({client}: IClientFormProps) {
       name: clientOldData?.name,
       phone: clientOldData?.phone,
     };
-    console.log("primeiro foi");
-    console.log("dataform", formData.birthDate);
 
     const newData = {
       CPF: formData?.CPF,
@@ -81,18 +88,12 @@ export function ClientProfileForm({client}: IClientFormProps) {
       name: formData?.name,
       phone: formData?.phone,
     };
-    console.log("nada?");
-
-    console.log("old", oldData);
-    console.log("new", newData);
-    console.log(isEqual(oldData, newData));
 
     if (updateForm) {
       setUpdateForm(false);
     } else {
       if (!isEqual(oldData, newData)) {
-        console.log("faz o update");
-        clientUpdate(formData);
+        clientUpdate(diffValues(oldData, newData));
         setUpdateForm(true);
       } else {
         setUpdateForm(true);
@@ -103,7 +104,9 @@ export function ClientProfileForm({client}: IClientFormProps) {
   return (
     <>
       {passwordModal ? <ChangePasswordModal setPasswordModal={setPasswordModal} /> : null}
-      <form className="flex flex-col gap-4 items-center  w-1/3 mx-auto rounded-3xl bg-zinc-300 p-7" onSubmit={handleSubmit(submit)}>
+      {updateAddress ? <ChangeAddressModal setUpdateAddress={setUpdateAddress} /> : null}
+
+      <form className="flex flex-col gap-4 items-center  w-1/3 mx-auto rounded-3xl bg-zinc-300 p-7  max-w-lg" onSubmit={handleSubmit(submit)}>
         <Input
           inputWidth="w-11/12"
           label="Nome"
@@ -127,7 +130,10 @@ export function ClientProfileForm({client}: IClientFormProps) {
           {...register("email")}
         />
 
-        <button className="w-11/12 h-10 bg-blue-500 rounded-xl text-zinc-200 mb-4 hover:bg-blue-600" onClick={() => setPasswordModal(!passwordModal)}>
+        <button
+          className="w-11/12 h-10 bg-blue-500 rounded-xl text-zinc-200 mb-4 hover:bg-blue-600"
+          type="button"
+          onClick={() => setPasswordModal(!passwordModal)}>
           Alterar Senha
         </button>
 
@@ -166,6 +172,13 @@ export function ClientProfileForm({client}: IClientFormProps) {
           disabled={updateForm}
           {...register("phone")}
         />
+
+        <button
+          className="w-11/12 h-10 bg-blue-500 rounded-xl text-zinc-200 hover:bg-blue-600 mb-8"
+          type="button"
+          onClick={() => setUpdateAddress(!updateAddress)}>
+          Alterar Endereço
+        </button>
 
         <button className="w-11/12 h-10 bg-blue-500 rounded-xl text-zinc-200 hover:bg-blue-600" type="submit">
           Editar

@@ -17,8 +17,11 @@ interface IClientContext {
   clientRegister: (clientData: TCreateClient) => Promise<void>;
   login: (clientData: TloginForm) => Promise<void>;
   activeClient: IClient | null;
+  selectedAddress: IAddress | null;
+  setSelectedAddress: React.Dispatch<React.SetStateAction<IAddress | null>>;
   logoff: () => void;
   clientUpdate: (clientData: TUpdateClient) => Promise<void>;
+  registerAddress: (clientId: string, payload: Partial<IAddress>) => Promise<void>;
 }
 
 interface IToastyMessage {
@@ -26,17 +29,17 @@ interface IToastyMessage {
   message?: string;
 }
 
-interface IAddress {
+export interface IAddress {
   id: number;
   street: string;
   number: number;
-  complement: string;
+  complement?: string | null;
   zipCode: string;
   neighborhood: string;
   state: string;
   city: string;
   country: string;
-  clientId: number;
+  clientId?: number | null;
 }
 
 export interface IClient {
@@ -70,19 +73,19 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   const {setShowTemplateModal} = useContext(ControllerContext);
   const [activeClient, setActiveClient] = useState<IClient | null>(null);
   const [clientToken, setClientToken] = useState("");
+  const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
+
   const navigate = useNavigate();
 
   const login = async (clientData: TloginForm) => {
     try {
       const {data} = await api.post("/login", clientData);
-      console.log(data.client);
+
       setActiveClient(data.client);
       localStorage.setItem("@TOKEN", data.token);
       localStorage.setItem("@CLIENTID", data.client.publicId);
-      console.log(activeClient);
+
       setShowTemplateModal(false);
-      const clientId = data.client.publicId;
-      console.log(clientId);
 
       navigate("/");
     } catch (error) {
@@ -100,30 +103,40 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     setShowTemplateModal(false);
   };
 
+  const registerAddress = async (clientId: string, payload: Partial<IAddress>) => {
+    try {
+      const {data} = await api.post(`/address/${clientId}`, payload);
+      setTimeout(() => navigate("/clientProfile"), 2000);
+      toast.success(<Msg status={"Cadastro efetuado com sucesso!"} />, {autoClose: 1500});
+      autoLogin();
+    } catch (error) {
+      const currentError = error as AxiosError<errorAxios>;
+      console.log(currentError);
+    }
+  };
+
   const clientRegister = async (clientData: TCreateClient): Promise<void> => {
     const formatedDate = format(clientData.birthDate, "yyyy/MM/dd");
 
     const formatedCPF = clientData.CPF.replace(/[.-]/g, "");
     const payload = {...clientData, CPF: formatedCPF, birthDate: formatedDate};
     try {
-      console.log(payload);
       const {data} = await api.post("/clients", payload);
-      toast.success(<Msg status={"Cadastro efetuado com sucesso!"} />, {autoClose: 1500});
-      console.log(data);
 
-      setTimeout(() => navigate("/"), 2000);
-    } catch (error) {
-      const currentError = error as AxiosError<errorAxios>;
-      console.log(currentError.response?.data.message);
-      console.log(currentError.response?.data.errors);
+      registerAddress(data.publicId, payload.address);
+      //setTimeout(() => navigate("/"), 2000);
+    } catch (error2) {
+      const currentError2 = error2 as AxiosError<errorAxios>;
+      console.log(currentError2.response?.data.message);
+      console.log(currentError2.response?.data.errors);
       toast.error(
         <Msg
           status={"Ops! Algo deu errado"}
           message={
-            currentError.response?.data.message
-              ? currentError.response.data.message
-              : currentError.response?.data.errors
-                ? currentError.response?.data.errors[0]
+            currentError2.response?.data.message
+              ? currentError2.response.data.message
+              : currentError2.response?.data.errors
+                ? currentError2.response?.data.errors[0]
                 : ""
           }
         />,
@@ -134,6 +147,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
 
   const clientUpdate = async (clientData: TUpdateClient): Promise<void> => {
     let formatedDate;
+
     if (clientData.birthDate) {
       formatedDate = format(clientData?.birthDate, "yyyy/MM/dd");
     }
@@ -141,7 +155,6 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     const formatedCPF = clientData.CPF?.replace(/[.-]/g, "");
     const payload = {...clientData, CPF: formatedCPF, birthDate: formatedDate};
     try {
-      console.log(payload);
       const {data} = await api.patch(`/clients/${activeClient?.publicId}`, payload, {
         headers: {
           Authorization: `Bearer ${clientToken}`,
@@ -149,8 +162,6 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
       });
 
       toast.success(<Msg status={"Cadastro atualizado com sucesso!"} />, {autoClose: 1500});
-
-      console.log(data);
 
       setTimeout(() => navigate("/"), 2000);
       autoLogin();
@@ -179,7 +190,6 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     const id = localStorage.getItem("@CLIENTID");
     if (token) {
       setClientToken(token);
-      console.log("autologin");
 
       try {
         const {data} = await api.get(`clients/${id}`, {
@@ -202,7 +212,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   //prettier-ignore
 
   return (
-  <ClientContext.Provider value={{clientRegister,login,activeClient,logoff,clientUpdate}}>
+  <ClientContext.Provider value={{clientRegister,login,activeClient,logoff,clientUpdate,registerAddress,selectedAddress,setSelectedAddress}}>
     {children}
   </ClientContext.Provider>
   )

@@ -17,7 +17,7 @@ export function Header() {
         <img src={megaStore} alt="Logo da loja" className="w-60" />
       </Link>
       <nav className="flex items-center">
-        <ul className="flex gap-20 border-none ">
+        <ul className="flex gap-16 border-none mx-4">
           <li>Shop</li>
           <li>Ofertas</li>
           <li>Novidades</li>

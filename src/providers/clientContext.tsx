@@ -22,6 +22,7 @@ interface IClientContext {
   logoff: () => void;
   clientUpdate: (clientData: TUpdateClient) => Promise<void>;
   registerAddress: (clientId: string, payload: Partial<IAddress>) => Promise<void>;
+  deleteAddress: (id: number) => Promise<void>;
 }
 
 interface IToastyMessage {
@@ -70,7 +71,7 @@ const Msg = ({status, message}: IToastyMessage) => (
 export const ClientContext = createContext({} as IClientContext);
 
 export const ClientContextProvider = ({children}: IClientProviderProps) => {
-  const {setShowTemplateModal} = useContext(ControllerContext);
+  const {setShowTemplateModal, setIsLoading} = useContext(ControllerContext);
   const [activeClient, setActiveClient] = useState<IClient | null>(null);
   const [clientToken, setClientToken] = useState("");
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
@@ -79,21 +80,23 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
 
   const login = async (clientData: TloginForm) => {
     try {
+      setShowTemplateModal(false);
+      setIsLoading(true);
       const {data} = await api.post("/login", clientData);
 
       setActiveClient(data.client);
       localStorage.setItem("@TOKEN", data.token);
       localStorage.setItem("@CLIENTID", data.client.publicId);
-
-      setShowTemplateModal(false);
-
-      navigate("/");
+      //  navigate("/");
     } catch (error) {
       const currentError = error as AxiosError<errorAxios>;
       toast.error("Ops!, algo deu errado");
       console.log(currentError);
+    } finally {
+      setIsLoading(false);
     }
   };
+
   const logoff = () => {
     setActiveClient(null);
     localStorage.removeItem("@TOKEN");
@@ -105,6 +108,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
 
   const registerAddress = async (clientId: string, payload: Partial<IAddress>) => {
     try {
+      setIsLoading(true);
       const {data} = await api.post(`/address/${clientId}`, payload);
       setTimeout(() => navigate("/clientProfile"), 2000);
       toast.success(<Msg status={"Cadastro efetuado com sucesso!"} />, {autoClose: 1500});
@@ -112,7 +116,13 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     } catch (error) {
       const currentError = error as AxiosError<errorAxios>;
       console.log(currentError);
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const deleteAddress = async (id: number): Promise<void> => {
+    console.log(activeClient?.address.find((address) => address.id === id));
   };
 
   const clientRegister = async (clientData: TCreateClient): Promise<void> => {
@@ -121,6 +131,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     const formatedCPF = clientData.CPF.replace(/[.-]/g, "");
     const payload = {...clientData, CPF: formatedCPF, birthDate: formatedDate};
     try {
+      setIsLoading(true);
       const {data} = await api.post("/clients", payload);
 
       registerAddress(data.publicId, payload.address);
@@ -142,6 +153,8 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
         />,
         {autoClose: 3000},
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -155,6 +168,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     const formatedCPF = clientData.CPF?.replace(/[.-]/g, "");
     const payload = {...clientData, CPF: formatedCPF, birthDate: formatedDate};
     try {
+      setIsLoading(true);
       const {data} = await api.patch(`/clients/${activeClient?.publicId}`, payload, {
         headers: {
           Authorization: `Bearer ${clientToken}`,
@@ -162,7 +176,6 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
       });
 
       toast.success(<Msg status={"Cadastro atualizado com sucesso!"} />, {autoClose: 1500});
-
       setTimeout(() => navigate("/"), 2000);
       autoLogin();
     } catch (error) {
@@ -182,6 +195,8 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
         />,
         {autoClose: 3000},
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -199,7 +214,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
         });
         setActiveClient(data);
 
-        navigate("/");
+        // navigate("/");
       } catch (error) {
         console.log(error);
       }
@@ -212,7 +227,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   //prettier-ignore
 
   return (
-  <ClientContext.Provider value={{clientRegister,login,activeClient,logoff,clientUpdate,registerAddress,selectedAddress,setSelectedAddress}}>
+  <ClientContext.Provider value={{clientRegister,login,activeClient,logoff,clientUpdate,registerAddress,selectedAddress,setSelectedAddress,deleteAddress}}>
     {children}
   </ClientContext.Provider>
   )

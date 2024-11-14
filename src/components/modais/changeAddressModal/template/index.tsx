@@ -9,8 +9,9 @@ type IChangeAddressModalProps = {
 
 export function ChangeAddressModal({setUpdateAddress}: IChangeAddressModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+
   const [addAddress, setAddAddress] = useState(false);
-  const {setSelectedAddress, selectedAddress} = useContext(ClientContext);
+  const {setSelectedAddress} = useContext(ClientContext);
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {

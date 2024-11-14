@@ -16,7 +16,7 @@ export function CardList() {
       <ul className="flex mt-12 gap-8 overflow-x-auto p-4 max-w-full">
         {productList.map((card, index) => {
           const abrevDescription = `${card.description.substring(0, 40)} ...`;
-          return <Card key={index} name={card.name} description={abrevDescription} img={img} price={card.price} />;
+          return <Card key={index} id={card.publicId} name={card.name} description={abrevDescription} img={img} price={card.price} />;
         })}
       </ul>
       <button className="border-2 p-1 w-32 h-10 m-8 rounded-2xl border-neutral-800">Ver Mais</button>

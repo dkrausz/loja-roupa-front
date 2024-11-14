@@ -22,6 +22,7 @@ export function AddAddress() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: {errors, isSubmitting},
   } = useForm<IAddress>({
     defaultValues: selectedAddress
@@ -67,10 +68,6 @@ export function AddAddress() {
       zipCode: formData?.zipCode,
     };
 
-    console.log("SelectAddress", oldAddress);
-    console.log("FormData", updatedAddress);
-    console.log(isEqual(oldAddress, updatedAddress));
-
     if (selectedAddress && disableFields) {
       setDisableFields(false);
     } else if (selectedAddress != null && disableFields === false) {
@@ -86,11 +83,24 @@ export function AddAddress() {
     }
   };
 
+  const handleBeforeValidation = () => {
+    console.log("chegeui");
+
+    const values = getValues(); // Obtém os valores do formulário
+    console.log("Dados antes da validação:", values);
+  };
+
   return (
     <>
       <h2 className="text-center text-2xl font-semibold my-2">{hasAddress() ? "Alterar endereço" : "Cadastro novo endereço"}</h2>
 
-      <form className="flex bg-zinc-300 rounded-lg flex-col items-center justify-normal py-4" onSubmit={handleSubmit(submit)}>
+      <form
+        className="flex bg-zinc-300 rounded-lg flex-col items-center justify-normal py-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleBeforeValidation();
+          handleSubmit(submit)(e);
+        }}>
         <InputZipCode
           inputWidth="w-11/12 px-6  m-auto "
           label="CEP"
@@ -143,9 +153,9 @@ export function AddAddress() {
           id={"neighborhood"}
           type={"text"}
           className="w-64 rounded-md h-8"
-          value={address ? address.bairro : undefined}
           disabled={disableFields}
           error={errors.neighborhood}
+          value={address ? address.bairro : undefined}
           {...register("neighborhood")}
         />
 
@@ -155,9 +165,9 @@ export function AddAddress() {
           id={"state"}
           type={"text"}
           className="w-64 rounded-md h-8"
-          value={address ? address.estado : undefined}
           disabled={disableFields}
           error={errors.state}
+          value={address ? address.estado : undefined}
           {...register("state")}
         />
 

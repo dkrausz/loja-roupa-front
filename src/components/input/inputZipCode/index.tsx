@@ -1,8 +1,10 @@
-import {ForwardedRef, forwardRef, InputHTMLAttributes} from "react";
+import {ForwardedRef, forwardRef, InputHTMLAttributes, useContext} from "react";
 import {FieldError} from "react-hook-form";
 import InputMask, {ReactInputMask} from "react-input-mask";
 import {viaCep} from "../../../services/viaCep";
 import {OptionalIViaCep} from "../../form/registerClientForm";
+import {AxiosError} from "axios";
+import {ControllerContext} from "../../../providers/controllerContext";
 
 interface IInputPhoneProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -11,14 +13,30 @@ interface IInputPhoneProps extends InputHTMLAttributes<HTMLInputElement> {
   setAddress: React.Dispatch<React.SetStateAction<OptionalIViaCep | null>>;
 }
 
+type errorAxios = {
+  message?: string;
+};
+
 export const InputZipCode = forwardRef(({label, inputWidth, setAddress, error, ...rest}: IInputPhoneProps, ref: ForwardedRef<ReactInputMask>) => {
+  const {setIsLoading} = useContext(ControllerContext);
   const classes = `flex flex-col ${inputWidth} bg-zinc-300`;
 
   const searchZipCode = async (e: React.FocusEvent<HTMLInputElement>) => {
     const formatedZipCode = e.target.value.replace(/-/g, "");
-    const {data} = await viaCep.get(`/${formatedZipCode}/json`);
 
-    if (data) setAddress(data);
+    if (e.target.value) {
+      try {
+        setIsLoading(true);
+        const {data} = await viaCep.get(`/${formatedZipCode}/json`);
+
+        setAddress(data);
+      } catch (error) {
+        const currentError = error as AxiosError<errorAxios>;
+        console.log(currentError);
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   return (

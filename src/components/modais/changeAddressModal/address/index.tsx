@@ -9,7 +9,6 @@ interface IAddressProps {
 
 export function Address({setAddAddress}: IAddressProps) {
   const {activeClient} = useContext(ClientContext);
-  console.log(activeClient);
 
   return (
     <div className="m-8">

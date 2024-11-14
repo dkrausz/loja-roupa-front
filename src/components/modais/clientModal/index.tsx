@@ -9,7 +9,7 @@ export function ClientModal() {
   const {logoff} = useContext(ClientContext);
   return (
     <div className="flex flex-col justify-center items-center gap-4 m-8">
-      <ul className="flex flex-col gap-4 items-start bg-red-300">
+      <ul className="flex flex-col gap-4 items-start">
         <li className="flex gap-2 items-center text-2xl hover:text-zinc-700">
           <ImProfile />
           <Link to={"/clientProfile"}>Perfil</Link>

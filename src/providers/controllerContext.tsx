@@ -11,11 +11,11 @@ interface IControllerContext {
   setShowLogintModal: React.Dispatch<React.SetStateAction<boolean>>;
   showTemplateModal: boolean;
   setShowTemplateModal: React.Dispatch<React.SetStateAction<boolean>>;
-  getProducts: () => Promise<void>;
+  getProducts: (page: number, perPage: number, productName?: string) => Promise<Product[]>;
   productList: Product[];
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  getProductById: (id: string) => Promise<Product>;
+  getProductById: (id: string) => Promise<Product | null>;
 }
 
 export type Product = {
@@ -38,10 +38,22 @@ export const ControllerContextProvider = ({children}: IControllerProviderProps) 
   const [showTemplateModal, setShowTemplateModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const getProducts = async () => {
-    const {data} = await api.get("/products");
+  const getProducts = async (page: number, perPage: number, productName?: string) => {
+    const route = `/products?page=${page}&perPage=${perPage}${productName ? `&searchProduct=${productName}` : ""}`;
 
-    setProductList(data.data);
+    try {
+      setIsLoading(true);
+      const {data} = await api.get(route);
+
+      setProductList(data.data);
+      return data.data;
+    } catch (error) {
+      const currentError = error as AxiosError<errorType>;
+      console.log(currentError);
+      return [];
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const getProductById = async (id: string): Promise<Product | null> => {

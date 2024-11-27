@@ -1,0 +1,211 @@
+type Roupa = {
+  nome: string;
+  descricao: string;
+  preco: number;
+  linkImagem: string;
+};
+
+const roupas: Roupa[] = [
+  {
+    nome: "Camiseta Branca Básica",
+    descricao: "Camiseta feita de algodão 100%, ideal para o dia a dia.",
+    preco: 39.99,
+    linkImagem: "https://picsum.photos/200/300?random=1",
+  },
+  {
+    nome: "Jaqueta de Couro",
+    descricao: "Jaqueta de couro sintético, perfeita para um look estiloso.",
+    preco: 199.99,
+    linkImagem: "https://picsum.photos/200/300?random=2",
+  },
+  {
+    nome: "Vestido Floral",
+    descricao: "Vestido leve e confortável com estampa floral.",
+    preco: 129.9,
+    linkImagem: "https://picsum.photos/200/300?random=3",
+  },
+  {
+    nome: "Calça Jeans Skinny",
+    descricao: "Calça jeans com modelagem skinny, ajusta-se ao corpo.",
+    preco: 89.9,
+    linkImagem: "https://picsum.photos/200/300?random=4",
+  },
+  {
+    nome: "Blusa de Tricot",
+    descricao: "Blusa de tricot macio, ideal para dias frios.",
+    preco: 109.9,
+    linkImagem: "https://picsum.photos/200/300?random=5",
+  },
+  {
+    nome: "Camisa Social",
+    descricao: "Camisa social masculina, ideal para ocasiões formais.",
+    preco: 79.9,
+    linkImagem: "https://picsum.photos/200/300?random=6",
+  },
+  {
+    nome: "Saia Midi",
+    descricao: "Saia midi elegante, com tecido leve e confortável.",
+    preco: 89.9,
+    linkImagem: "https://picsum.photos/200/300?random=7",
+  },
+  {
+    nome: "Shorts Jeans",
+    descricao: "Shorts jeans casual, ideal para dias quentes.",
+    preco: 59.9,
+    linkImagem: "https://picsum.photos/200/300?random=8",
+  },
+  {
+    nome: "Casaco de Lã",
+    descricao: "Casaco de lã quentinho, ideal para o inverno.",
+    preco: 239.9,
+    linkImagem: "https://picsum.photos/200/300?random=9",
+  },
+  {
+    nome: "Blazer Feminino",
+    descricao: "Blazer feminino elegante, ideal para o trabalho.",
+    preco: 159.9,
+    linkImagem: "https://picsum.photos/200/300?random=10",
+  },
+  {
+    nome: "Camiseta Preta Básica",
+    descricao: "Camiseta básica preta, uma peça indispensável no guarda-roupa.",
+    preco: 39.99,
+    linkImagem: "https://picsum.photos/200/300?random=11",
+  },
+  {
+    nome: "Moletom Cinza",
+    descricao: "Moletom cinza confortável e casual.",
+    preco: 89.9,
+    linkImagem: "https://picsum.photos/200/300?random=12",
+  },
+  {
+    nome: "Tênis Esportivo",
+    descricao: "Tênis leve e flexível, ideal para esportes e caminhadas.",
+    preco: 229.9,
+    linkImagem: "https://picsum.photos/200/300?random=13",
+  },
+  {
+    nome: "Macacão Jeans",
+    descricao: "Macacão jeans casual, perfeito para passeios.",
+    preco: 149.9,
+    linkImagem: "https://picsum.photos/200/300?random=14",
+  },
+  {
+    nome: "Camisa Polo",
+    descricao: "Camisa polo masculina de algodão, ideal para ocasiões casuais.",
+    preco: 69.9,
+    linkImagem: "https://picsum.photos/200/300?random=15",
+  },
+  {
+    nome: "Saída de Praia",
+    descricao: "Vestido leve para usar na praia ou piscina.",
+    preco: 59.9,
+    linkImagem: "https://picsum.photos/200/300?random=16",
+  },
+  {
+    nome: "Jaqueta Jeans",
+    descricao: "Jaqueta jeans clássica, nunca sai de moda.",
+    preco: 179.9,
+    linkImagem: "https://picsum.photos/200/300?random=17",
+  },
+  {
+    nome: "Calça Cargo",
+    descricao: "Calça cargo estilosa, com múltiplos bolsos.",
+    preco: 99.9,
+    linkImagem: "https://picsum.photos/200/300?random=18",
+  },
+  {
+    nome: "Blusa Canelada",
+    descricao: "Blusa ajustada ao corpo, com tecido canelado confortável.",
+    preco: 49.9,
+    linkImagem: "https://picsum.photos/200/300?random=19",
+  },
+  {
+    nome: "Chapéu de Palha",
+    descricao: "Chapéu de palha para se proteger do sol com estilo.",
+    preco: 39.9,
+    linkImagem: "https://picsum.photos/200/300?random=20",
+  },
+  {
+    nome: "Camiseta Branca Básica",
+    descricao: "Camiseta feita de algodão 100%, ideal para o dia a dia.",
+    preco: 39.99,
+    linkImagem: "https://picsum.photos/200/300?random=1",
+  },
+  {
+    nome: "Jaqueta de Couro",
+    descricao: "Jaqueta de couro sintético, perfeita para um look estiloso.",
+    preco: 199.99,
+    linkImagem: "https://picsum.photos/200/300?random=2",
+  },
+  {nome: "Vestido Floral", descricao: "Vestido leve e confortável com estampa floral.", preco: 129.9, linkImagem: "https://picsum.photos/200/300?random=3"},
+  {
+    nome: "Calça Jeans Skinny",
+    descricao: "Calça jeans com modelagem skinny, ajusta-se ao corpo.",
+    preco: 89.9,
+    linkImagem: "https://picsum.photos/200/300?random=4",
+  },
+  {nome: "Blusa de Tricot", descricao: "Blusa de tricot macio, ideal para dias frios.", preco: 109.9, linkImagem: "https://picsum.photos/200/300?random=5"},
+  {
+    nome: "Camisa Social",
+    descricao: "Camisa social masculina, ideal para ocasiões formais.",
+    preco: 79.9,
+    linkImagem: "https://picsum.photos/200/300?random=6",
+  },
+  {nome: "Saia Midi", descricao: "Saia midi elegante, com tecido leve e confortável.", preco: 89.9, linkImagem: "https://picsum.photos/200/300?random=7"},
+  {nome: "Shorts Jeans", descricao: "Shorts jeans casual, ideal para dias quentes.", preco: 59.9, linkImagem: "https://picsum.photos/200/300?random=8"},
+  {nome: "Casaco de Lã", descricao: "Casaco de lã quentinho, ideal para o inverno.", preco: 239.9, linkImagem: "https://picsum.photos/200/300?random=9"},
+  {nome: "Blazer Feminino", descricao: "Blazer feminino elegante, ideal para o trabalho.", preco: 159.9, linkImagem: "https://picsum.photos/200/300?random=10"},
+  {nome: "Moletom Oversized", descricao: "Moletom confortável e estiloso, com capuz.", preco: 99.9, linkImagem: "https://picsum.photos/200/300?random=11"},
+  {nome: "Tênis Casual", descricao: "Tênis versátil e confortável para o dia a dia.", preco: 149.9, linkImagem: "https://picsum.photos/200/300?random=12"},
+  {nome: "Bermuda de Sarja", descricao: "Bermuda casual de sarja, perfeita para o verão.", preco: 69.9, linkImagem: "https://picsum.photos/200/300?random=13"},
+  {
+    nome: "Camisa Polo",
+    descricao: "Camisa polo masculina de algodão, ideal para ocasiões casuais.",
+    preco: 79.9,
+    linkImagem: "https://picsum.photos/200/300?random=14",
+  },
+  {
+    nome: "Vestido Longo",
+    descricao: "Vestido longo elegante, perfeito para festas e eventos formais.",
+    preco: 199.9,
+    linkImagem: "https://picsum.photos/200/300?random=15",
+  },
+  {nome: "Jaqueta Jeans Oversized", descricao: "Jaqueta jeans oversized, estilo vintage.", preco: 189.9, linkImagem: "https://picsum.photos/200/300?random=16"},
+  {nome: "Calça Legging", descricao: "Calça legging com tecido de alta elasticidade.", preco: 59.9, linkImagem: "https://picsum.photos/200/300?random=17"},
+  {
+    nome: "Blusa Cropped",
+    descricao: "Blusa cropped estilosa, perfeita para looks despojados.",
+    preco: 49.9,
+    linkImagem: "https://picsum.photos/200/300?random=18",
+  },
+  {nome: "Top Esportivo", descricao: "Top com suporte ideal para atividades físicas.", preco: 39.9, linkImagem: "https://picsum.photos/200/300?random=19"},
+  {
+    nome: "Chapéu de Palha",
+    descricao: "Chapéu de palha para se proteger do sol com estilo.",
+    preco: 29.9,
+    linkImagem: "https://picsum.photos/200/300?random=20",
+  },
+  {nome: "Cardigan de Lã", descricao: "Cardigan quentinho, ideal para dias frios.", preco: 119.9, linkImagem: "https://picsum.photos/200/300?random=21"},
+  {nome: "Camisa Estampada", descricao: "Camisa casual com estampas tropicais.", preco: 89.9, linkImagem: "https://picsum.photos/200/300?random=22"},
+  {nome: "Blusa de Alça", descricao: "Blusa de alça fina, leve e confortável.", preco: 29.9, linkImagem: "https://picsum.photos/200/300?random=23"},
+  {nome: "Saída de Praia", descricao: "Saída de praia em tecido leve e estampado.", preco: 59.9, linkImagem: "https://picsum.photos/200/300?random=24"},
+  {
+    nome: "Jaqueta Corta-Vento",
+    descricao: "Jaqueta leve e impermeável, ideal para ventos fortes.",
+    preco: 159.9,
+    linkImagem: "https://picsum.photos/200/300?random=25",
+  },
+  {nome: "Conjunto Moletom", descricao: "Conjunto de moletom confortável e casual.", preco: 189.9, linkImagem: "https://picsum.photos/200/300?random=26"},
+  {nome: "Camisa Xadrez", descricao: "Camisa xadrez clássica, ideal para looks casuais.", preco: 79.9, linkImagem: "https://picsum.photos/200/300?random=27"},
+  {
+    nome: "Blusa Gola Alta",
+    descricao: "Blusa ajustada com gola alta, ideal para o inverno.",
+    preco: 69.9,
+    linkImagem: "https://picsum.photos/200/300?random=28",
+  },
+  {nome: "Vestido Tubinho", descricao: "Vestido tubinho clássico e elegante.", preco: 139.9, linkImagem: "https://picsum.photos/200/300?random=29"},
+  {nome: "Calça Pantacourt", descricao: "Calça ampla e confortável, com estilo moderno.", preco: 99.9, linkImagem: "https://picsum.photos/200/300?random=30"},
+
+  // ... Repita o padrão variando os nomes, descrições, preços e links de imagens até 100 itens.
+];

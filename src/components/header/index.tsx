@@ -18,10 +18,18 @@ export function Header() {
       </Link>
       <nav className="flex items-center">
         <ul className="flex gap-16 border-none mx-4">
-          <li>Shop</li>
-          <li>Ofertas</li>
-          <li>Novidades</li>
-          <li>Marcas</li>
+          <li>
+            <Link to="/products">Shop</Link>
+          </li>
+          <li>
+            <Link to="/offers">Ofertas</Link>
+          </li>
+          <li>
+            <Link to="/news">Novidades</Link>
+          </li>
+          <li>
+            <Link to="/brands">Marcas</Link>
+          </li>
         </ul>
       </nav>
       <div className="flex items-center gap-8">
@@ -29,7 +37,7 @@ export function Header() {
         <h2>Olá {activeClient ? activeClient.name : "Visitante"}</h2>
 
         <Cart />
-        <VscAccount size={25} onClick={() => setShowTemplateModal(!showTemplateModal)} />
+        <VscAccount size={25} className="cursor-pointer" onClick={() => setShowTemplateModal(!showTemplateModal)} />
       </div>
     </header>
   );

@@ -5,10 +5,12 @@ import {ControllerContext, Product} from "../../providers/controllerContext";
 import {useParams} from "react-router-dom";
 import img from "../../assets/calca.png";
 import {FiMinusCircle, FiPlusCircle} from "react-icons/fi";
+import {ClientContext} from "../../providers/clientContext";
 
 export function ProductPage() {
   const {id} = useParams();
   const {getProductById} = useContext(ControllerContext);
+  const {addToCart} = useContext(ClientContext);
   const [product, setProduct] = useState<Product | null>(null);
   const [quantity, setQuantity] = useState(1);
 
@@ -16,6 +18,13 @@ export function ProductPage() {
     if (id) {
       const data = await getProductById(id);
       setProduct(data);
+    }
+  };
+
+  const addProduct = () => {
+    if (product) {
+      const newProduct = {...product, quantity: quantity};
+      addToCart(newProduct);
     }
   };
 
@@ -51,7 +60,9 @@ export function ProductPage() {
                   <span className="bg-slate-100 w-6 rounded text-center">{quantity}</span>
                   <FiPlusCircle className="cursor-pointer" onClick={() => setQuantity(quantity + 1)} />
                 </div>
-                <button className="w-80 h-8 bg-blue-500 rounded-xl text-zinc-200 mt-2">Adicionar ao carrinho</button>
+                <button className="w-80 h-8 bg-blue-500 rounded-xl text-zinc-200 mt-2" onClick={() => addProduct()}>
+                  Adicionar ao carrinho
+                </button>
               </div>
             </div>
           </div>

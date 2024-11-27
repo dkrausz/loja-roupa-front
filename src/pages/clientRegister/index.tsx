@@ -1,7 +1,14 @@
+import {useContext, useEffect} from "react";
 import {RegisterClientForm} from "../../components/form/registerClientForm";
 import {TemplatePage} from "../Template";
+import {ControllerContext} from "../../providers/controllerContext";
 
 export function ClientRegister() {
+  const {setShowTemplateModal} = useContext(ControllerContext);
+  useEffect(() => {
+    setShowTemplateModal(false);
+  }, []);
+
   return (
     <>
       <TemplatePage>

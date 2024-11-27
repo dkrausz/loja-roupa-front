@@ -22,7 +22,7 @@ export function LoginModal() {
 
   const error = null;
   return (
-    <form onSubmit={handleSubmit(submit)} className="m-8 flex flex-col items-center">
+    <form onSubmit={handleSubmit(submit)} className="m-8 flex flex-col items-center ">
       <Input
         label={"Email: "}
         id={"login-email"}

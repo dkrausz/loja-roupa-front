@@ -1,10 +1,17 @@
-import {useContext} from "react";
+import {useContext, useEffect} from "react";
 import {TemplatePage} from "../Template";
 import {ClientContext} from "../../providers/clientContext";
 import {ClientProfileForm} from "../../components/form/clientProfileForm";
+import {ControllerContext} from "../../providers/controllerContext";
 
 export function ClientProfile() {
   const {activeClient} = useContext(ClientContext);
+  const {setShowTemplateModal} = useContext(ControllerContext);
+
+  useEffect(() => {
+    setShowTemplateModal(false);
+  }, []);
+
   return (
     <>
       <TemplatePage>

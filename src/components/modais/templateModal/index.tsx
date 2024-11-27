@@ -32,7 +32,7 @@ export function TemplateModal() {
   }, []);
 
   return (
-    <div role="dialog" className="h-64 w-96 bg-neutral-300  absolute right-0 top-24" ref={modalRef}>
+    <div role="dialog" className="h-64 w-96 bg-neutral-300  absolute right-0 top-24 rounded-lg" ref={modalRef}>
       {activeClient ? <ClientModal /> : <LoginModal />}
     </div>
   );

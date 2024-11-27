@@ -6,7 +6,7 @@ import {format} from "date-fns";
 import {toast} from "react-toastify";
 import {AxiosError} from "axios";
 import {TloginForm} from "../components/modais/loginModal/schema";
-import {ControllerContext} from "./controllerContext";
+import {ControllerContext, Product} from "./controllerContext";
 import {TUpdateClient} from "../components/form/clientProfileForm/schema";
 
 interface IClientProviderProps {
@@ -23,7 +23,16 @@ interface IClientContext {
   clientUpdate: (clientData: TUpdateClient) => Promise<void>;
   registerAddress: (clientId: string, payload: Partial<IAddress>) => Promise<void>;
   deleteAddress: (id: number) => Promise<void>;
+  addToCart: (newProduct: CartProduct) => void;
+  retriveCartOnLocalStorage: () => void;
+  updateCart: (id: string, newQuantity: number) => void;
+  deleteFromCart: (id: string) => void;
+  cartList: CartProduct[];
 }
+
+export type CartProduct = Product & {
+  quantity: number;
+};
 
 interface IToastyMessage {
   status: string;
@@ -75,8 +84,36 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   const [activeClient, setActiveClient] = useState<IClient | null>(null);
   const [clientToken, setClientToken] = useState("");
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
+  const [cartList, setCartList] = useState<Array<CartProduct>>([]);
 
   const navigate = useNavigate();
+
+  const saveCartOnLocalStorage = (cartList: CartProduct[]) => {
+    const stringCart = JSON.stringify(cartList);
+    localStorage.setItem("@CART", stringCart);
+  };
+
+  const retriveCartOnLocalStorage = () => {
+    const cartProducts = localStorage.getItem("@CART");
+    if (cartProducts) {
+      const convertedCartProducts = JSON.parse(cartProducts);
+      setCartList(convertedCartProducts);
+    }
+  };
+
+  const addToCart = (newProduct: CartProduct) => {
+    setCartList(() => {
+      return [...cartList, newProduct];
+    });
+  };
+
+  const updateCart = (id: string, newQuantity: number) => {
+    cartList.map((product) => (product.publicId === id ? {...product, quantity: newQuantity} : product));
+  };
+
+  const deleteFromCart = (id: string) => {
+    setCartList((products) => products.filter((product) => product.publicId != id));
+  };
 
   const login = async (clientData: TloginForm) => {
     try {
@@ -109,7 +146,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   const registerAddress = async (clientId: string, payload: Partial<IAddress>) => {
     try {
       setIsLoading(true);
-      const {data} = await api.post(`/address/${clientId}`, payload);
+      await api.post(`/address/${clientId}`, payload);
       setTimeout(() => navigate("/clientProfile"), 2000);
       toast.success(<Msg status={"Cadastro efetuado com sucesso!"} />, {autoClose: 1500});
       autoLogin();
@@ -203,6 +240,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   const autoLogin = async () => {
     const token = localStorage.getItem("@TOKEN");
     const id = localStorage.getItem("@CLIENTID");
+
     if (token) {
       setClientToken(token);
 
@@ -216,6 +254,8 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
 
         // navigate("/");
       } catch (error) {
+        localStorage.removeItem("@TOKEN");
+        localStorage.removeItem("@CLIENTID");
         console.log(error);
       }
     }
@@ -224,11 +264,18 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   useEffect(() => {
     autoLogin();
   }, []);
+
+  useEffect(() => {
+    saveCartOnLocalStorage(cartList);
+  }, [cartList]);
+
   //prettier-ignore
 
   return (
-  <ClientContext.Provider value={{clientRegister,login,activeClient,logoff,clientUpdate,registerAddress,selectedAddress,setSelectedAddress,deleteAddress}}>
-    {children}
-  </ClientContext.Provider>
-  )
+    <ClientContext.Provider
+      value={{clientRegister, login, activeClient, logoff, clientUpdate, registerAddress, 
+      selectedAddress, setSelectedAddress, deleteAddress, addToCart,retriveCartOnLocalStorage,updateCart,deleteFromCart,cartList}}>
+      {children}
+    </ClientContext.Provider>
+  );
 };

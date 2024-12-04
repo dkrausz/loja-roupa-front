@@ -5,7 +5,7 @@ type Roupa = {
   linkImagem: string;
 };
 
-const roupas: Roupa[] = [
+export const roupas: Roupa[] = [
   {
     nome: "Camiseta Branca Básica",
     descricao: "Camiseta feita de algodão 100%, ideal para o dia a dia.",

@@ -84,8 +84,7 @@ export function AddAddress() {
   };
 
   const handleBeforeValidation = () => {
-    const values = getValues(); // Obtém os valores do formulário
-    "Dados antes da validação:", values;
+    //  const values = getValues(); // Obtém os valores do formulário
   };
 
   return (

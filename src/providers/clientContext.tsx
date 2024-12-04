@@ -164,6 +164,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
       total: order.total,
       products: cartList,
     };
+    console.log("vercel Stuff", newOrder);
     if (token) {
       try {
         setIsLoading(true);
@@ -277,7 +278,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     const payload = {...clientData, CPF: formatedCPF, birthDate: formatedDate};
     try {
       setIsLoading(true);
-      const {data} = await api.patch(`/clients/${activeClient?.publicId}`, payload, {
+      await api.patch(`/clients/${activeClient?.publicId}`, payload, {
         headers: {
           Authorization: `Bearer ${clientToken}`,
         },

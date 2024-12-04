@@ -1,6 +1,7 @@
 import {zodResolver} from "@hookform/resolvers/zod";
 import {InputPassword} from "../../input/inputPassword";
-import {useForm, handleSubmit, SubmitHandler} from "react-hook-form";
+import {useForm} from "react-hook-form";
+// import {useForm, handleSubmit, SubmitHandler} from "react-hook-form";
 import {changePasswordSchema, TChangePassword} from "../../form/registerClientForm/schema";
 import {useEffect, useRef} from "react";
 
@@ -13,15 +14,15 @@ export function ChangePasswordModal({setPasswordModal}: IChangePasswordModalProp
 
   const {
     register,
-    handleSubmit,
+    //   handleSubmit,
     formState: {errors},
   } = useForm<TChangePassword>({
     resolver: zodResolver(changePasswordSchema),
   });
 
-  const submit: SubmitHandler<TChangePassword> = async (formData) => {
-    console.log(formData);
-  };
+  // const submit: SubmitHandler<TChangePassword> = async (formData) => {
+  //   console.log(formData);
+  // };
 
   useEffect(() => {
     const handleClick = (event: MouseEvent) => {
@@ -79,7 +80,7 @@ export function ChangePasswordModal({setPasswordModal}: IChangePasswordModalProp
             error={errors.confirmPwd}
             {...register("confirmPwd")}
           />
-          <button type="" className="w-11/12 h-8 bg-blue-500 rounded-xl text-zinc-200">
+          <button type="button" className="w-11/12 h-8 bg-blue-500 rounded-xl text-zinc-200">
             Alterar
           </button>
         </form>

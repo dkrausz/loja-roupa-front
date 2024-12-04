@@ -22,7 +22,7 @@ export function AddAddress() {
   const {
     register,
     handleSubmit,
-    getValues,
+    // getValues,
     formState: {errors, isSubmitting},
   } = useForm<IAddress>({
     defaultValues: selectedAddress

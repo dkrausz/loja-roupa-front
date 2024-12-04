@@ -24,11 +24,38 @@ interface IClientContext {
   registerAddress: (clientId: string, payload: Partial<IAddress>) => Promise<void>;
   deleteAddress: (id: number) => Promise<void>;
   addToCart: (newProduct: CartProduct) => void;
-  retriveCartOnLocalStorage: () => void;
+  // retriveCartOnLocalStorage: () => void;
   updateCart: (id: string, newQuantity: number) => void;
   deleteFromCart: (id: string) => void;
   cartList: CartProduct[];
+  clearCart: () => void;
+  sendNewOrder: (order: TOrderWithoutProducts) => Promise<void>;
+  cartSize: number;
 }
+
+export enum paymentType {
+  PIX = "PIX",
+  CARTAO_CREDITO = "CARTAO_CREDITO",
+  BOLETO = "BOLETO",
+}
+
+//export type PaymentType = keyof typeof paymentType;
+
+export enum status {
+  IN_PROGRESS = "IN_PROGRESS",
+  COMPLETED = "COMPLETED",
+  DELIVERED = "DELIVERED",
+}
+
+export interface IOrder {
+  paymentType: paymentType | null;
+  status: status | null;
+  discount: boolean;
+  total: number;
+  products: Product[];
+}
+
+export type TOrderWithoutProducts = Omit<IOrder, "products">;
 
 export type CartProduct = Product & {
   quantity: number;
@@ -80,11 +107,14 @@ const Msg = ({status, message}: IToastyMessage) => (
 export const ClientContext = createContext({} as IClientContext);
 
 export const ClientContextProvider = ({children}: IClientProviderProps) => {
+  const cartLocal = localStorage.getItem("@CART");
+  const cartProducts = cartLocal ? JSON.parse(cartLocal) : [];
   const {setShowTemplateModal, setIsLoading} = useContext(ControllerContext);
   const [activeClient, setActiveClient] = useState<IClient | null>(null);
   const [clientToken, setClientToken] = useState("");
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(null);
-  const [cartList, setCartList] = useState<Array<CartProduct>>([]);
+  const [cartList, setCartList] = useState<Array<CartProduct>>(cartProducts);
+  const [cartSize, setCartSize] = useState(0);
 
   const navigate = useNavigate();
 
@@ -93,26 +123,67 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
     localStorage.setItem("@CART", stringCart);
   };
 
-  const retriveCartOnLocalStorage = () => {
-    const cartProducts = localStorage.getItem("@CART");
-    if (cartProducts) {
-      const convertedCartProducts = JSON.parse(cartProducts);
-      setCartList(convertedCartProducts);
+  const addToCart = (newProduct: CartProduct) => {
+    const found = cartList.find((product) => product.publicId == newProduct.publicId);
+
+    if (found) {
+      const newQuantity = found.quantity + newProduct.quantity;
+      updateCart(found.publicId, newQuantity);
+    } else {
+      setCartList(() => {
+        return [...cartList, newProduct];
+      });
     }
   };
 
-  const addToCart = (newProduct: CartProduct) => {
-    setCartList(() => {
-      return [...cartList, newProduct];
-    });
-  };
-
   const updateCart = (id: string, newQuantity: number) => {
-    cartList.map((product) => (product.publicId === id ? {...product, quantity: newQuantity} : product));
+    setCartList(cartList.map((product) => (product.publicId === id ? {...product, quantity: newQuantity} : product)));
   };
 
   const deleteFromCart = (id: string) => {
     setCartList((products) => products.filter((product) => product.publicId != id));
+  };
+
+  const clearCart = () => {
+    setCartList([]);
+  };
+
+  const updateCartSize = () => {
+    const value = cartList.reduce((accumulator, item) => accumulator + item.quantity, 0);
+    setCartSize(() => {
+      return value;
+    });
+  };
+
+  const sendNewOrder = async (order: TOrderWithoutProducts) => {
+    const token = localStorage.getItem("@TOKEN");
+    const newOrder: IOrder = {
+      paymentType: order.paymentType,
+      status: order.status,
+      discount: order.discount,
+      total: order.total,
+      products: cartList,
+    };
+    if (token) {
+      try {
+        setIsLoading(true);
+        // const {data} = await api.post("/orders", newOrder, {
+        //   headers: {
+        //     Authorization: `Bearer ${token}`,
+        //   },
+        // });
+        toast.success(<Msg status={"Pedido efetuado com sucesso!"} />, {autoClose: 1500});
+        clearCart();
+      } catch (error) {
+        const currentError = error as AxiosError<errorAxios>;
+        toast.error("Ops!, algo deu errado");
+        console.log(currentError);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      toast.error("Você precisa estar logado para efetuar a compra!");
+    }
   };
 
   const login = async (clientData: TloginForm) => {
@@ -256,7 +327,6 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
       } catch (error) {
         localStorage.removeItem("@TOKEN");
         localStorage.removeItem("@CLIENTID");
-        console.log(error);
       }
     }
   };
@@ -266,6 +336,7 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   }, []);
 
   useEffect(() => {
+    updateCartSize();
     saveCartOnLocalStorage(cartList);
   }, [cartList]);
 
@@ -274,7 +345,8 @@ export const ClientContextProvider = ({children}: IClientProviderProps) => {
   return (
     <ClientContext.Provider
       value={{clientRegister, login, activeClient, logoff, clientUpdate, registerAddress, 
-      selectedAddress, setSelectedAddress, deleteAddress, addToCart,retriveCartOnLocalStorage,updateCart,deleteFromCart,cartList}}>
+      selectedAddress, setSelectedAddress, deleteAddress, addToCart,updateCart,deleteFromCart,cartList,
+      clearCart,sendNewOrder,cartSize}}>
       {children}
     </ClientContext.Provider>
   );

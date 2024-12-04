@@ -2,6 +2,22 @@ import {createContext, useState} from "react";
 import {api} from "../services/api";
 import {AxiosError} from "axios";
 
+// {
+//   "publicId": "dd40d8d0-1ba9-4c59-9181-a5c960f38cf6",
+//   "name": "Mega Store",
+//   "CNPJ": "41984004000139",
+//   "address": {
+//     "street": "Av Paulista",
+//     "number": 3258,
+//     "complement": "4 andar",
+//     "zipCode": "04710-000",
+//     "neighborhood": "cerqueira cesar",
+//     "state": "Sao Paulo",
+//     "city": "Sao Paulo",
+//     "country": "Brasil"
+//   }
+// }
+
 interface IControllerProviderProps {
   children: React.ReactNode;
 }
@@ -60,7 +76,7 @@ export const ControllerContextProvider = ({children}: IControllerProviderProps) 
     try {
       setIsLoading(true);
       const {data} = await api.get(`products/${id}`);
-      console.log(data);
+
       return data;
     } catch (error) {
       const currentError = error as AxiosError<errorType>;

@@ -7,9 +7,6 @@ interface AsideFilterProps {
 }
 
 export function AsideFilter({minMax, priceRange, setPriceRange}: AsideFilterProps) {
-  // console.log("FilterminMax", minMax);
-  //console.log("FilterpriceRange", priceRange);
-
   return (
     <aside className="w-80 border-solid border-zinc-300 border-2 p-4 h-72  rounded-lg mr-8">
       <PriceSlider label={"Preço"} setPriceRange={setPriceRange} priceRange={priceRange} minMax={minMax} />

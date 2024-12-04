@@ -1,9 +1,12 @@
+import {useContext} from "react";
 import {BsCart3} from "react-icons/bs";
 import {useNavigate} from "react-router-dom";
+import {ClientContext} from "../../providers/clientContext";
 
 export function Cart() {
   const navigate = useNavigate();
-  const cartSize = 0;
+  const {cartSize} = useContext(ClientContext);
+
   return (
     <div className=" relative">
       <BsCart3 size={25} className="cursor-pointer" onClick={() => navigate("/cartPage")} />

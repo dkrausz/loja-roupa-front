@@ -84,10 +84,8 @@ export function AddAddress() {
   };
 
   const handleBeforeValidation = () => {
-    console.log("chegeui");
-
     const values = getValues(); // Obtém os valores do formulário
-    console.log("Dados antes da validação:", values);
+    "Dados antes da validação:", values;
   };
 
   return (

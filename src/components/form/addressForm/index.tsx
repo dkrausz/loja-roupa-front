@@ -124,7 +124,7 @@ export function AddAddress() {
 
         <Input
           inputWidth="w-11/12 px-6 m-auto "
-          label="Number"
+          label="Numero"
           id={"number"}
           type={"text"}
           className="w-64 rounded-md h-8"

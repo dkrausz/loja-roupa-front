@@ -17,6 +17,10 @@ Este projeto é a parte frontend do sistema de loja de roupas, responsável por:
 
 ---
 
+## 🖼️ Capturas de Tela
+
+## ![Tema Claro](./src/assets/screen/store.jpg)
+
 ## 📦 Tecnologias Utilizadas
 
 - **[React](https://reactjs.org/)**: Biblioteca JavaScript para construção de interfaces de usuário.
